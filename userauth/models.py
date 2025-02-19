@@ -48,3 +48,12 @@ class CustomUserManager(BaseUserManager):
                 recipient_list=[email],
                 fail_silently=False,
             )
+
+            # Log email success
+            logger.info(f"Activation email sent successfully to {email}")
+
+            return user
+        
+        except Exception as e:
+            logger.error(f"Error during user registration: {e}")
+            raise ValidationError("Error during user registration")
