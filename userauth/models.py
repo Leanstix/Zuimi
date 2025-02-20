@@ -69,6 +69,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     activation_token = models.CharField(max_length=100, default=get_random_string)
+    phone_number = models.CharField(max_length=15, validators=[RegexValidator(r'^\+?1?\d{9,15}$')])
     
     objects = CustomUserManager()
 
