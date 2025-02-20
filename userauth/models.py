@@ -89,3 +89,4 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.save(update_fields=['is_active', 'email_verified', 'activation_token'])
             return True
         return False
+        
