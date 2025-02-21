@@ -6,9 +6,6 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 import logging
-import requests
-from io import BytesIO
-import json
 import os
 
 logger = logging.getLogger(__name__)
