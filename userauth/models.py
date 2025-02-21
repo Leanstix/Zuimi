@@ -52,6 +52,17 @@ class User(AbstractBaseUser, PermissionsMixin):
     email_verified = models.BooleanField(default=False)
     activation_token = models.CharField(max_length=100, default=get_random_string)
 
+    groups = models.ManyToManyField(
+        'auth.Group',
+        related_name="custom_user_set",
+        blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        'auth.Permission',
+        related_name="custom_user_set",
+        blank=True
+    )
+
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
