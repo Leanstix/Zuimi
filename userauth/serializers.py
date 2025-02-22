@@ -28,6 +28,23 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         return user
 
+class UpdateUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'user_name', 'phone_number']
+        read_only_fields = ['email']
+
+    def validate_phone_number(self, value):
+        if not value.startswith('+'):
+            raise serializers.ValidationError("Phone number must start with a '+' sign.")
+        return value
+    
+    def update(self, instance, validated_data):
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+        instance.save()
+        return instance
+
 class UserActivationSerializer(serializers.Serializer):
     token = serializers.CharField()
 
