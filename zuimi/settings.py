@@ -46,6 +46,16 @@ CORS_ALLOWED_ORIGINS = [
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'flow-e9ec.onrender.com', 'flow-aleshinloye-olamilekan-s-projects.vercel.app']
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+    ],
+}
+
 AUTHENTICATION_BACKENDS = [
     'login.auth_backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
