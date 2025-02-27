@@ -25,8 +25,28 @@ SECRET_KEY = 'django-insecure-t%(l!h(^084o3+ooqvo+hh*i5_14znh#9#z9zq%(1+bgmmg737
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+}
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Your frontend domain
+    'http://127.0.0.1:3000',
+    'https://flow-e9ec.onrender.com:10000',
+    'https://flow-aleshinloye-olamilekan-s-projects.vercel.app'
+]
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'flow-e9ec.onrender.com', 'flow-aleshinloye-olamilekan-s-projects.vercel.app']
 
 # Application definition
 
