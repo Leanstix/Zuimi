@@ -49,8 +49,7 @@ REDOC_SETTINGS = {
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Your frontend domain
     'http://127.0.0.1:3000',
-    'https://flow-e9ec.onrender.com:10000',
-    'https://flow-aleshinloye-olamilekan-s-projects.vercel.app'
+    'https://flow-e9ec.onrender.com:10000'
 ]
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'flow-e9ec.onrender.com', 'flow-aleshinloye-olamilekan-s-projects.vercel.app']
@@ -144,6 +143,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'userauth.User'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -161,6 +161,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
