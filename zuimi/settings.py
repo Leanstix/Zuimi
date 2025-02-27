@@ -48,6 +48,11 @@ CORS_ALLOWED_ORIGINS = [
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'flow-e9ec.onrender.com', 'flow-aleshinloye-olamilekan-s-projects.vercel.app']
 
+AUTHENTICATION_BACKENDS = [
+    'login.auth_backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # Application definition
 
 INSTALLED_APPS = [
