@@ -37,6 +37,15 @@ LOGGING = {
     },
 }
 
+SWAGGER_SETTINGS = {
+    'USE_SESSION_AUTH': False,
+    'DEFAULT_AUTO_SCHEMA_CLASS': 'drf_yasg.inspectors.SwaggerAutoSchema',
+}
+
+REDOC_SETTINGS = {
+    'LAZY_RENDERING': False,
+}
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Your frontend domain
     'http://127.0.0.1:3000',
