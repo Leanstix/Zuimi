@@ -12,12 +12,15 @@ logger = logging.getLogger(__name__)
 
 class CustomUserManager(BaseUserManager):
     try:
-        def create_user(self, email, password=None, **extra_fields):
+        def create_user(self, email, **extra_fields):
             if not email:
                 raise ValueError("Email field is required")
             email = self.normalize_email(email)
+
             user = self.model(email=email, **extra_fields)
-            
+            user.set_unusable_password()  # No password at initial creation
+            user.save()
+                
             # Send activation email
             #activation_link = f"{settings.FRONTEND_URL}/activate/{user.activation_token}"
             #subject = "Account Activation"
@@ -27,7 +30,7 @@ class CustomUserManager(BaseUserManager):
             #send_mail(subject, message, email_from, [email], fail_silently=False)
             activation_link = f"https://your-frontend-url.com/activate/{user.activation_token}"
             print(f"Activation Link (Dev): {activation_link}")
-            
+
             logger.info(f"User {email} created successfully and activation email sent.")
 
             return user
