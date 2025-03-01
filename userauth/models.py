@@ -19,13 +19,15 @@ class CustomUserManager(BaseUserManager):
             user = self.model(email=email, **extra_fields)
             
             # Send activation email
-            activation_link = f"{settings.FRONTEND_URL}/activate/{user.activation_token}"
-            subject = "Account Activation"
-            message = f"Hi {email},\n\nPlease activate your account using the link below:\n{activation_link}\n\nThank you!"
+            #activation_link = f"{settings.FRONTEND_URL}/activate/{user.activation_token}"
+            #subject = "Account Activation"
+            #message = f"Hi {email},\n\nPlease activate your account using the link below:\n{activation_link}\n\nThank you!"
 
-            email_from = os.environ.get('EMAIL_HOST_USER', 'noreply@example.com')
-            send_mail(subject, message, email_from, [email], fail_silently=False)
-
+            #email_from = os.environ.get('EMAIL_HOST_USER', 'noreply@example.com')
+            #send_mail(subject, message, email_from, [email], fail_silently=False)
+            activation_link = f"https://your-frontend-url.com/activate/{user.activation_token}"
+            print(f"Activation Link (Dev): {activation_link}")
+            
             logger.info(f"User {email} created successfully and activation email sent.")
 
             return user
@@ -34,44 +36,27 @@ class CustomUserManager(BaseUserManager):
         logger.error(f"Error during user registration: {e}")
         raise ValidationError("Error during user registration")
         
-
 class User(AbstractBaseUser, PermissionsMixin):
     GENDER_CHOICES = [('M', 'Male'), ('F', 'Female'), ('O', 'Other')]
 
     email = models.EmailField(unique=True, validators=[EmailValidator()])
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    user_name = models.CharField(max_length=100, unique=True)
-    phone_number = models.CharField(max_length=15, validators=[RegexValidator(r'^\+?1?\d{9,15}$')])
+    first_name = models.CharField(max_length=100, blank=True)
+    last_name = models.CharField(max_length=100, blank=True)
+    user_name = models.CharField(max_length=100, unique=True, blank=True)
+    phone_number = models.CharField(max_length=15, blank=True, validators=[RegexValidator(r'^\+?1?\d{9,15}$')])
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
     activation_token = models.CharField(max_length=100, default=get_random_string(length=32))
 
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name="custom_user_set",
-        blank=True
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name="custom_user_set",
-        blank=True
-    )
-
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'user_name']
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.email
-    
-    def save(self, *args, **kwargs):
-        if not self.user_name and not self.activation_token and not self.email_verified:
-            self.user_name = self.email
-        super().save(*args, **kwargs)
 
     def activate(self, token):
         if token == self.activation_token:
@@ -81,12 +66,4 @@ class User(AbstractBaseUser, PermissionsMixin):
             self.save(update_fields=['is_active', 'email_verified', 'activation_token'])
             return True
         return False
-    def activate(self, token):
-        if token == self.activation_token:
-            self.is_active = True
-            self.email_verified = True
-            self.activation_token = None
-            self.save(update_fields=['is_active', 'email_verified', 'activation_token'])
-            return True
-        return False
-        
+    
