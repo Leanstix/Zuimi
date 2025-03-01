@@ -27,19 +27,19 @@ class UserActivationView(APIView):
             return Response({"message": "Account activated successfully!"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-class UserProfileUpdateView(APIView):
+class ProfileUpdateView(APIView):
     permission_classes = [IsAuthenticated]
 
+    def get(self, request):
+        serializer = ProfileUpdateSerializer(request.user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
     def put(self, request):
-        serializer = UpdateUserSerializer(request.user, data=request.data)
+        serializer = ProfileUpdateSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def get(self, request):
-        serializer = UpdateUserSerializer(request.user)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ActivateAccountView(APIView):
     permission_classes = [AllowAny]
