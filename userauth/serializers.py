@@ -5,6 +5,13 @@ import os
 
 User = get_user_model()
 
+class EmailRegistrationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['email']
+
+    def create(self, validated_data):
+        return User.objects.create_user(**validated_data)
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -17,14 +24,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(password=password, **validated_data)
 
         # Send activation email
-        activation_url = f"https://flow-aleshinloye-olamilekan-s-projects.vercel.app/activate?token={user.activation_token}"
-        send_mail(
+        #activation_url = f"https://zuimi-aleshinloye-olamilekan-s-projects.vercel.app/activate?token={user.activation_token}"
+        '''send_mail(
             "Zuimi User Activation",
             f"Click the link to activate your account: {activation_url}",
             os.environ.get('EMAIL_HOST_USER', 'noreply@example.com'),
             [user.email],
             fail_silently=False,
-        )
+        )'''
 
         return user
 
