@@ -26,7 +26,7 @@ class UserActivationView(APIView):
             serializer.save()
             return Response({"message": "Account activated successfully!"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
 class UserProfileUpdateView(APIView):
     permission_classes = [IsAuthenticated]
 
