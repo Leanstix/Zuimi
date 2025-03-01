@@ -11,20 +11,6 @@ class EmailRegistrationSerializer(serializers.ModelSerializer):
         fields = ['email']
 
     def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
-class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = ['email', 'first_name', 'last_name', 'user_name', 'phone_number', 'password']
-
-    def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = User.objects.create_user(password=password, **validated_data)
-
-        # Send activation email
-        #activation_url = f"https://zuimi-aleshinloye-olamilekan-s-projects.vercel.app/activate?token={user.activation_token}"
         '''send_mail(
             "Zuimi User Activation",
             f"Click the link to activate your account: {activation_url}",
@@ -32,23 +18,29 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             [user.email],
             fail_silently=False,
         )'''
+        return User.objects.create_user(**validated_data)
 
-        return user
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, required=False)
 
-class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'user_name', 'phone_number']
+        fields = ['first_name', 'last_name', 'user_name', 'phone_number', 'password']
         read_only_fields = ['email']
 
-    def validate_phone_number(self, value):
-        if not value.startswith('+'):
-            raise serializers.ValidationError("Phone number must start with a '+' sign.")
-        return value
-    
+    def validate(self, attrs):
+        if not self.instance.is_active:
+            raise serializers.ValidationError("Account is not active. Complete activation first.")
+        return attrs
+
     def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
         for key, value in validated_data.items():
             setattr(instance, key, value)
+
+        if password:
+            instance.set_password(password)
+
         instance.save()
         return instance
 
