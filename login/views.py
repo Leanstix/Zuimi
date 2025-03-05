@@ -43,3 +43,37 @@ class LoginView(APIView):
                     else None
                 ),
             }
+
+            user_data.update({k: v for k, v in optional_fields.items() if v is not None})
+
+            return Response(user_data, status=status.HTTP_200_OK)
+        else:
+            # Logging serializer errors for debugging
+            logger.error("Login validation failed: %s", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            # Get the refresh token from the request body
+            refresh_token = request.data.get("refresh")
+            if not refresh_token:
+                logger.error("No refresh token provided.")
+                return Response({"error": "Refresh token missing."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Validate the refresh token
+            token = RefreshToken(refresh_token)
+
+            # Blacklist the token (if blacklisting is enabled)
+            # token.blacklist()
+
+            logger.info("Successfully logged out user.")
+            return Response({"message": "Successfully logged out."}, status=status.HTTP_200_OK)
+        except TokenError as e:
+            logger.error(f"Token Error: {e}")
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            logger.error(f"Error during logout: {e}")
+            return Response(status=status.HTTP_400_BAD_REQUEST)
