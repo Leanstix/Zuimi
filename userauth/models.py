@@ -51,6 +51,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
+    profile_picture = models.URLField(blank=True, null=True)
     activation_token = models.CharField(max_length=100, default=get_random_string(length=32))
 
     objects = CustomUserManager()
