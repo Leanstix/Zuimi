@@ -79,6 +79,7 @@ REST_FRAMEWORK = {
 AUTHENTICATION_BACKENDS = [
     'login.auth_backends.EmailBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'userauth.authentication_backends.PhoneNumberAuthBackend',
 ]
 
 # Application definition
