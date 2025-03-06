@@ -20,16 +20,16 @@ class LoginSerializer(serializers.Serializer):
                     if not user.is_active:
                         raise AuthenticationFailed("This account is inactive.")
                     return {'user': user}
+                else:
+                    raise AuthenticationFailed("Invalid phone number or password.")
             if email and password:
-                
-            # Authenticate user with provided credentials
-            user = authenticate(username=email, password=password)
-            if user:
-                # Check if the user is active
-                if not user.is_active:
-                    raise AuthenticationFailed("This account is inactive.")
-                return {'user': user}  # Return the authenticated user object
+                user = authenticate(email=email, password=password)
+                if user:
+                    if not user.is_active:
+                        raise AuthenticationFailed("This account is inactive.")
+                    return {'user': user}
             else:
                 raise AuthenticationFailed("Invalid email or password.")
         else:
-            raise serializers.ValidationError("Must include 'email' and 'password'")
+            raise serializers.ValidationError("Must include 'email' and 'password' or 'phone_number' and 'password'")
+            
