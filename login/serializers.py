@@ -3,7 +3,8 @@ from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+    email = serializers.EmailField(required=False)
+    phone_number = serializers.CharField(required=False)
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
@@ -11,25 +12,20 @@ class LoginSerializer(serializers.Serializer):
         email = data.get('email')
         password = data.get('password')
 
-        if email or phone_number:
-            if phone_number and password:
-                # Authenticate user with provided credentials
-                user = authenticate(phone_number=phone_number, password=password)
-                if user:
-                    # Check if the user is active
-                    if not user.is_active:
-                        raise AuthenticationFailed("This account is inactive.")
-                    return {'user': user}
-                else:
-                    raise AuthenticationFailed("Invalid phone number or password.")
-            if email and password:
-                user = authenticate(email=email, password=password)
-                if user:
-                    if not user.is_active:
-                        raise AuthenticationFailed("This account is inactive.")
-                    return {'user': user}
-            else:
-                raise AuthenticationFailed("Invalid email or password.")
+        if not (email or phone_number):
+            raise serializers.ValidationError("Must include either 'email' or 'phone_number' along with 'password'.")
+
+        if phone_number and password:
+            user = authenticate(request=self.context.get('request'), phone_number=phone_number, password=password)
+        elif email and password:
+            user = authenticate(request=self.context.get('request'), email=email, password=password)
         else:
-            raise serializers.ValidationError("Must include 'email' and 'password' or 'phone_number' and 'password'")
-            
+            raise serializers.ValidationError("Invalid login credentials.")
+
+        if user is None:
+            raise AuthenticationFailed("Invalid credentials.")
+
+        if not user.is_active:
+            raise AuthenticationFailed("This account is inactive.")
+
+        return {'user': user}
