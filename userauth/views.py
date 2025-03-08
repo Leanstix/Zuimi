@@ -13,9 +13,17 @@ class EmailRegistrationView(APIView):
     def post(self, request):
         serializer = EmailRegistrationSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response({"message": "Please check the terminal for your activation link."}, status=status.HTTP_201_CREATED)
+            try:
+                user = serializer.save()
+                return Response(
+                    {"message": f"Account created successfully! Check {user.email} for activation instructions."}, 
+                    status=status.HTTP_201_CREATED
+                )
+            except Exception as e:
+                return Response({"error": "Something went wrong. Please try again."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class UserActivationView(APIView):
     permission_classes = [AllowAny]
