@@ -8,7 +8,7 @@ from django.utils.timezone import now
 
 User = get_user_model()
 
-class EmailRegistrationView(APIView):
+class UserRegistrationView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):

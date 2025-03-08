@@ -1,24 +1,28 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-#from django.core.mail import send_mail
+from django.contrib.auth import get_user_model 
+from django.conf import settings
 import os
+from dotenv import load_dotenv
+#from django.core.mail import send_mail
 
 User = get_user_model()
 
-class EmailRegistrationSerializer(serializers.ModelSerializer):
+class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email']
 
     def create(self, validated_data):
+        email = validated_data.pop('email')
         user = User(**validated_data)
         user.save()
+        Email = os.environ.get('EMAIL_HOST_USER')
         activation_url = f"http://localhost:3000/activate?token={user.activation_token}"
 
         '''send_mail(
             "Zuimi User Activation",
             f"Click the link to activate your account: {activation_url}",
-            os.environ.get('EMAIL_HOST_USER', 'noreply@example.com'),
+            Email,
             [user.email],
             fail_silently=False,
         )'''
