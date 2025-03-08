@@ -30,10 +30,17 @@ class UserActivationView(APIView):
 
     def post(self, request):
         serializer = UserActivationSerializer(data=request.data)
+        
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
+            
+            if user.is_active:
+                return Response({"message": "Your account is already activated."}, status=status.HTTP_200_OK)
+            
             return Response({"message": "Account activated successfully!"}, status=status.HTTP_200_OK)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     
 class ProfileUpdateView(APIView):
     permission_classes = [IsAuthenticated]
