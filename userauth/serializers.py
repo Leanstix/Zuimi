@@ -22,7 +22,9 @@ class EmailRegistrationSerializer(serializers.ModelSerializer):
             [user.email],
             fail_silently=False,
         )'''
-        return User.objects.create_user(**validated_data)
+
+        print(f"Activation link (copy and paste in browser to activate): {activation_url}")
+        return user
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
