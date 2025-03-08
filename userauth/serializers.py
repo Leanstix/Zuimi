@@ -11,6 +11,10 @@ class EmailRegistrationSerializer(serializers.ModelSerializer):
         fields = ['email']
 
     def create(self, validated_data):
+        user = User(**validated_data)
+        user.save()
+        activation_url = f"http://localhost:3000/activate?token={user.activation_token}"
+
         '''send_mail(
             "Zuimi User Activation",
             f"Click the link to activate your account: {activation_url}",
@@ -42,7 +46,7 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             instance.set_password(password)
 
         instance.save()
-        return instance
+        return User
 
 class UserActivationSerializer(serializers.Serializer):
     token = serializers.CharField()
