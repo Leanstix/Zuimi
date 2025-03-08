@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from .serializers import EmailRegistrationSerializer, ChangePasswordSerializer, UserActivationSerializer, ProfileUpdateSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import get_user_model
+from django.utils.timezone import now
 
 User = get_user_model()
 
@@ -61,13 +62,30 @@ class ActivateAccountView(APIView):
 
     def get(self, request):
         token = request.GET.get('token')
+        
+        if not token:
+            return Response({"error": "Activation token is required."}, status=status.HTTP_400_BAD_REQUEST)
+
         try:
             user = User.objects.get(activation_token=token)
-            if user.activate(token):
-                return Response({"message": "Account activated successfully!"}, status=status.HTTP_200_OK)
-            return Response({"message": "Invalid activation token."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Check if already activated
+            if user.is_active:
+                return Response({"message": "Account is already activated."}, status=status.HTTP_200_OK)
+
+            # Example: Ensure token hasn't expired (assuming you store token creation time)
+            if user.activation_token_expires and user.activation_token_expires < now():
+                return Response({"error": "Activation token has expired."}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Activate user
+            user.is_active = True
+            user.activation_token = None  # Clear the token
+            user.save()
+
+            return Response({"message": "Account activated successfully!"}, status=status.HTTP_200_OK)
+
         except User.DoesNotExist:
-            return Response({"message": "Invalid or expired activation token."}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Invalid or expired activation token."}, status=status.HTTP_400_BAD_REQUEST)
 
 class ChangePasswordView(APIView):
     permission_classes = [IsAuthenticated]
