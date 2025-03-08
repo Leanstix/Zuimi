@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .serializers import EmailRegistrationSerializer, ChangePasswordSerializer, UserActivationSerializer, ProfileUpdateSerializer
+from .serializers import UserRegistrationSerializer, ChangePasswordSerializer, UserActivationSerializer, ProfileUpdateSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
@@ -12,7 +12,7 @@ class UserRegistrationView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = EmailRegistrationSerializer(data=request.data)
+        serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             try:
                 user = serializer.save()
