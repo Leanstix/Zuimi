@@ -60,11 +60,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Your frontend domain
-    'http://127.0.0.1:3000',
-    'https://flow-e9ec.onrender.com:10000'
+    'http://127.0.0.1:3000'
 ]
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'flow-e9ec.onrender.com', 'flow-aleshinloye-olamilekan-s-projects.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
