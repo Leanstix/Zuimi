@@ -8,16 +8,14 @@ from dotenv import load_dotenv
 User = get_user_model()
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
-    password = serializers.charfield(write_only=True)
     class Meta:
         model = User
-        fields = ['email', 'password']
+        fields = ['email']
 
     def create(self, validated_data):
-        password = validated_data.pop('password')
         email = validated_data.pop('email')
         user = User(**validated_data)
-        user.set_password(password)
+        user.set_email(email)
         user.save()
         Email = os.environ.get('EMAIL_HOST_USER')
         activation_url = f"http://localhost:3000/activate?token={user.activation_token}"
