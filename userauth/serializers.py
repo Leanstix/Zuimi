@@ -75,6 +75,10 @@ class UserActivationSerializer(serializers.Serializer):
     def save(self):
         user = User.objects.get(activation_token=self.validated_data['token'])
         user.activate(self.validated_data['token'])
+        new_password = self.generate_password()
+        user.set_password(new_password)
+        user.save()
+        print(f"New password for user {user.email}: {new_password}")
         return user
 
 class ChangePasswordSerializer(serializers.Serializer):
