@@ -3,6 +3,8 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 import os
 from dotenv import load_dotenv
+import string
+import random
 #from django.core.mail import send_mail
 
 User = get_user_model()
@@ -64,6 +66,11 @@ class UserActivationSerializer(serializers.Serializer):
         except User.DoesNotExist:
             raise serializers.ValidationError("Invalid or expired activation token.")
         return value
+    
+    def generate_password(self, length=13):
+        characters = string.ascii_letters + string.digits + string.punctuation
+        password = ''.join(random.choice(characters) for i in range(length))
+        return password
 
     def save(self):
         user = User.objects.get(activation_token=self.validated_data['token'])
