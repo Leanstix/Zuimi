@@ -9,29 +9,36 @@ import random
 
 User = get_user_model()
 
+from django.core.mail import send_mail
+from rest_framework import serializers
+from django.conf import settings
+import os
+from .models import User
+
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['email']
 
     def create(self, validated_data):
-        email = validated_data.pop('email')
-        user = User(**validated_data)
-        user.set_email(email)
+        email = validated_data['email']
+        user = User.objects.create(email=email, **validated_data)
+        user.activation_token = user.generate_activation_token()  # Ensure this method exists
         user.save()
-        Email = os.environ.get('EMAIL_HOST_USER')
+
         activation_url = f"http://localhost:3000/activate?token={user.activation_token}"
 
-        '''send_mail(
+        send_mail(
             "Zuimi User Activation",
             f"Click the link to activate your account: {activation_url}",
-            Email,
+            settings.EMAIL_HOST_USER,
             [user.email],
             fail_silently=False,
-        )'''
+        )
 
         print(f"Activation link (copy and paste in browser to activate): {activation_url}")
         return user
+
 
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
