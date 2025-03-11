@@ -15,6 +15,12 @@ class LoginSerializer(serializers.Serializer):
         if not (email or phone_number):
             raise serializers.ValidationError("Must include either 'email' or 'phone_number' along with 'password'.")
 
+        user = authenticate(
+            request=self.context.get('request'),
+            username=email or phone_number,
+            password=password
+        )
+        
         if phone_number and password:
             user = authenticate(phone_number=phone_number, password=password)
         elif email and password:
