@@ -15,8 +15,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields = ['email']
 
     def create(self, validated_data):
+        print("working till here")
         email = validated_data['email']
+        print("working till here 2")
         user = User.objects.create(email=email, **validated_data)
+        print("working till here 3")
         user.save()
         Email = os.environ.get('EMAIL_HOST_USER')
         activation_url = f"http://localhost:3000/activate?token={user.activation_token}"
