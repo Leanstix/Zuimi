@@ -17,9 +17,9 @@ class CustomUserManager(BaseUserManager):
         user.set_unusable_password()  # No password at initial creation
         user.generate_activation_token()
         user.save()
-
-        activation_link = f"{settings.FRONTEND_URL}/activate/{user.activation_token}"
         
+        activation_link = f"{settings.FRONTEND_URL}/activate/{user.activation_token}"
+        print(f"Activation link: {activation_link}")
         logger.info(f"User {email} created successfully. Activation link: {activation_link}")
 
         return user
