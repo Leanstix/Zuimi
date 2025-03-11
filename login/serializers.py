@@ -20,14 +20,6 @@ class LoginSerializer(serializers.Serializer):
             username=email or phone_number,
             password=password
         )
-        
-        if phone_number and password:
-            user = authenticate(phone_number=phone_number, password=password)
-        elif email and password:
-            user = authenticate(email=email, password=password)
-        else:
-            raise serializers.ValidationError("Invalid login credentials.")
-
         if user is None:
             raise AuthenticationFailed("Invalid credentials.")
 
