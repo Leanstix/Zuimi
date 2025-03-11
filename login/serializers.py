@@ -3,8 +3,8 @@ from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=False)
-    phone_number = serializers.CharField(required=False)
+    email = serializers.EmailField(required=False, allow_blank=True)
+    phone_number = serializers.CharField(required=False, allow_blank=True)
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
