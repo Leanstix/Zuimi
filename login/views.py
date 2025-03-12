@@ -11,7 +11,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 class LoginView(APIView):
-    permission_class=[AllowAny]
+    permission_classes=[AllowAny]
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)

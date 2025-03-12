@@ -5,6 +5,7 @@ User = get_user_model()
 
 class PhoneNumberAuthBackend(BaseBackend):
     def authenticate(self, request, phone_number=None, password=None, **kwargs):
+        print(f"Authenticating user0: {phone_number}")
         try:
             user = User.objects.get(phone_number=phone_number)
         except User.DoesNotExist:
