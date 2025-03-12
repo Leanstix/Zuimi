@@ -9,7 +9,7 @@ class EmailOrPhoneBackend(ModelBackend):
     email or phone number.
     """
     def authenticate(self, request, username=None, password=None, **kwargs):
-        print(f"Authenticating user: {username}")
+        #print(f"Authenticating user: {username}")
         if username is None or password is None:
             return None
 
