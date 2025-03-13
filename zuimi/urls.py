@@ -29,6 +29,7 @@ urlpatterns = [
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('api/user/', include('userauth.urls')),
     path('api/login/', include('login.urls')),
+    path('api/token/', include('token_generator.urls')),
 ]
 
 if settings.DEBUG:
