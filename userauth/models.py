@@ -46,13 +46,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
     user_name = models.CharField(max_length=100, unique=True, blank=True)
-    phone_number = models.CharField(max_length=15, blank=True, validators=[RegexValidator(r'^\+?1?\d{9,15}$')])
+    phone_number = models.CharField(max_length=15, blank=True, validators=[RegexValidator(r'^\+?1?\d{9,15}$')], blank=True, null=True, unique=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     email_verified = models.BooleanField(default=False)
     profile_picture = models.URLField(blank=True, null=True)
-    gender
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, null=True)
     activation_token = models.CharField(max_length=100, default=get_random_string(length=32), blank=True, null=True)
 
     objects = CustomUserManager()
