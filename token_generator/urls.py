@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import GenerateAccessTokenView
+from .views import GenerateAccessToken
 
 urlpatterns = [
-    path('generate-access-token/', GenerateAccessTokenView.as_view(), name='generate-access-token'),
+    path('generate-access-token/', GenerateAccessToken.as_view(), name='generate-access-token'),
 ]
