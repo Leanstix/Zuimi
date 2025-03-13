@@ -8,7 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-class GenersteAccessToken(APIView):
+class GenerateAccessToken(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
