@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'userauth',
     'login',
+    'token_generator',
 ]
 
 MIDDLEWARE = [
