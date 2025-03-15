@@ -96,6 +96,9 @@ INSTALLED_APPS = [
     'userauth',
     'login',
     'token_generator',
+    'wallet',
+    'transaction',
+    'notification',
 ]
 
 MIDDLEWARE = [
