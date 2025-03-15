@@ -98,7 +98,7 @@ INSTALLED_APPS = [
     'token_generator',
     'wallet',
     'transaction',
-    'notification',
+    #'notification',
 ]
 
 MIDDLEWARE = [
