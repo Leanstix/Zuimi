@@ -66,9 +66,6 @@ class LogoutView(APIView):
             # Validate the refresh token
             token = RefreshToken(refresh_token)
 
-            # Blacklist the token (if blacklisting is enabled)
-            # token.blacklist()
-
             logger.info("Successfully logged out user.")
             return Response({"message": "Successfully logged out."}, status=status.HTTP_200_OK)
         except TokenError as e:
